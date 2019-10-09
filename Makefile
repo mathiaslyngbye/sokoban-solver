@@ -14,7 +14,7 @@ sokoban.o: sokoban.cpp sokoban.hpp
 	$(CXX) -c sokoban.cpp
 
 clean:
-	rm *.o
-	rm ./build/sokoban-solver
+	rm -f *.o
+	rm -f ./build/*
 
 .PHONY: all sokoban-solver clean
