@@ -1,6 +1,10 @@
+# Ignore all things qtcreator
 *.config
 *.creator
 *.user
 *.files
 *.includes
+
+# Ignore object and build files
+*.o
 build/*
