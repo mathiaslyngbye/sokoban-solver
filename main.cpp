@@ -22,7 +22,7 @@ bool import(std::vector<std::string> &t_map, std::string t_filename)
     while(!mapfile.eof())
     {   
         getline(mapfile,mapline);   // Save line to temp variable
-        t_map.push_back(mapline);     // Push variable to map vector
+        t_map.push_back(mapline);   // Push variable to map vector
     }
    
     // Close map file
@@ -65,12 +65,34 @@ int main(int argc, char *argv[])
     tmp_map += "X...G..X";
     tmp_map += "XXXXXXXX";
     Sokoban board(tmp_map,9,8);
-    board.print();  
-    board.move(1,0);
-    board.print();
-    board.move(0,1);
-    board.print();
-    board.move(0,-1);
-    board.print();
+
+    // Scuffed user input
+    while(1)
+    {
+        system("clear");
+        board.print();
+        std::cout << "Input: ";
+        char key;
+        std::cin >> key;
+
+        switch(key)
+        {
+        case 'a':
+            board.move(-1,0);
+            break;
+        case 's':
+            board.move(0,1);
+            break;
+        case 'd':
+            board.move(1,0);
+            break;
+        case 'w':
+            board.move(0,-1);
+            break;
+        default:
+            return 0;
+        }
+    }
+
     return 0;
 }
