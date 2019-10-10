@@ -7,7 +7,7 @@
 class Sokoban
 {
 public:
-    Sokoban(std::string t_board, int t_rows, int t_cols);
+    Sokoban(std::string t_board, int t_cols, int t_rows);
     void print();
     void move(int t_dx, int t_dy);
 private:
