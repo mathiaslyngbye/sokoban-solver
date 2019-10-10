@@ -5,7 +5,11 @@
 
 #include "sokoban.hpp"
 
-bool import(std::vector<std::string> &t_map, std::string t_filename)
+// Import data from filename, store in map, cols, and rows
+bool import(std::string &t_map, 
+            int &t_cols, 
+            int &t_rows, 
+            std::string t_filename)
 {
     // Attempt to open map file
     std::ifstream mapfile;
@@ -13,29 +17,49 @@ bool import(std::vector<std::string> &t_map, std::string t_filename)
     
     // Check if file can be opened (exists)
     if(!mapfile.is_open())
-    {
         return false;
-    }
-    
+   
     // Store contents of map file in map vector
-    std::string mapline;
+    std::vector<std::string> tmp_map;
+    std::string tmp_map_line;
     while(!mapfile.eof())
     {   
-        getline(mapfile,mapline);   // Save line to temp variable
-        t_map.push_back(mapline);   // Push variable to map vector
+        getline(mapfile, tmp_map_line);
+        tmp_map.push_back(tmp_map_line);
     }
    
-    // Close map file
-    mapfile.close();
+    // Find dimensions
+    t_cols = 0;
+    t_rows = tmp_map.size()-1;
+    for(int i = 0; i != tmp_map.size(); i++)
+    {
+        if(tmp_map[i].length() > t_cols)
+            t_cols = tmp_map[i].length();
+    }
 
+    // Store map in string
+    for(int i = 0; i < t_rows; i++)
+    {
+        t_map += tmp_map[i];
+        
+        int space = (t_cols-tmp_map[i].length());
+        std::cout << space << std::endl;
+        if(space)
+        {
+            for(int i = 0; i < space; i++)
+                t_map += ' ';
+        }
+    }
+
+    mapfile.close();
     return true;
 }
 
-
 int main(int argc, char *argv[])
 {  
-    std::string filename;
-    std::vector<std::string> map;
+    std::string map;
+    int cols;
+    int rows;
 
     if(argc != 2)
     {
@@ -44,27 +68,17 @@ int main(int argc, char *argv[])
     }
     else
     {
-        filename = argv[1];
-    }
+        std::string filename = argv[1];
+        if(!import(map, cols, rows, filename))
+        {
+            std::cout << "Failed to import file " << filename << std::endl;
+            return -1;
+        }
+    } 
     
-    if(!import(map, filename))
-    {
-        std::cout << "Failed to import file " << filename << std::endl;
-        return -1;
-    }
-    
-    // Hardcoded test map
-    std::string tmp_map = "";
-    tmp_map += "  XXXXX ";
-    tmp_map += "XXX...X ";
-    tmp_map += "XGMJ..X ";
-    tmp_map += "XXX.JGX ";
-    tmp_map += "XGXXJ.X ";
-    tmp_map += "X.X.G.XX";
-    tmp_map += "XJ.jJJGX";
-    tmp_map += "X...G..X";
-    tmp_map += "XXXXXXXX";
-    Sokoban board(tmp_map,9,8);
+    // Create sokoban board object
+    Sokoban board(map, cols, rows);
+    board.print();
 
     // Scuffed user input
     while(1)
