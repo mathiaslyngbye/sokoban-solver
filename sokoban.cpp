@@ -16,7 +16,7 @@ void Sokoban::print()
             std::cout << std::endl;
         std::cout << m_board[i];
     }
-    std::cout << std::endl;
+    std::cout << std::endl << std::endl;
     std::cout << "Agent is at " << m_agent << std::endl;
 }
 
@@ -24,8 +24,7 @@ void Sokoban::move(int t_dx, int t_dy)
 {
     int agent_m1 = m_agent + (t_dx + t_dy*m_cols);
     int agent_m2 = m_agent + (2*t_dx + 2*t_dy*m_cols);
-    
-    
+     
     if(isBox(m_board[agent_m1]) && isFree(m_board[agent_m2]))
         moveCell(m_board[agent_m1], m_board[agent_m2]);
     
