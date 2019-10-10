@@ -40,10 +40,8 @@ bool import(std::string &t_map,
     // Store map in string
     for(int i = 0; i < t_rows; i++)
     {
-        t_map += tmp_map[i];
-        
+        t_map += tmp_map[i]; 
         int space = (t_cols-tmp_map[i].length());
-        std::cout << space << std::endl;
         if(space)
         {
             for(int i = 0; i < space; i++)
@@ -78,10 +76,10 @@ int main(int argc, char *argv[])
     
     // Create sokoban board object
     Sokoban board(map, cols, rows);
-    board.print();
+    board.playback("LdllluuuuRRdrUUUUdddlllddrUluRRdrUUUruLLLulDrrrddddllldddrUUUluRRdrUUUruLddddlldddrruLdlUUUluRRdrUUUruuLLLrDRurD");
 
     // Scuffed user input
-    while(1)
+    while(0)
     {
         system("clear");
         board.print();
@@ -107,6 +105,5 @@ int main(int argc, char *argv[])
             return 0;
         }
     }
-
     return 0;
 }

@@ -1,3 +1,5 @@
+#include <unistd.h>
+
 #include "sokoban.hpp"
 
 Sokoban::Sokoban(std::string t_board, int t_cols, int t_rows)
@@ -17,9 +19,6 @@ void Sokoban::print()
         std::cout << m_board[i];
     }
     std::cout << std::endl; 
-    std::cout << "Cols " << m_cols << std::endl;
-    std::cout << "Rows " << m_rows << std::endl;
-    std::cout << "Agent is at " << m_agent << std::endl;
 }
 
 void Sokoban::move(int t_dx, int t_dy)
@@ -35,6 +34,33 @@ void Sokoban::move(int t_dx, int t_dy)
         moveCell(m_board[m_agent], m_board[agent_m1]);
         m_agent = agent_m1;
     }
+}
+
+void Sokoban::playback(std::string t_solution)
+{
+    for(int i = 0; i < t_solution.length(); i++)
+    {
+        system("clear");
+        print();
+        usleep(150000);
+        switch(t_solution[i])
+        {
+        case 'u': case 'U':
+            move(0,-1);
+            break;
+        case 'd': case 'D':
+            move(0,1);
+            break;
+        case 'l': case 'L':
+            move(-1,0);
+            break;
+        case 'r': case 'R':
+            move(1,0);
+            break;
+        }
+    }
+    system("clear");
+    print();
 }
 
 void Sokoban::moveCell(char &t_src, char &t_dst)

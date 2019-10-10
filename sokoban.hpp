@@ -10,6 +10,7 @@ public:
     Sokoban(std::string t_board, int t_cols, int t_rows);
     void print();
     void move(int t_dx, int t_dy);
+    void playback(std::string t_solution);
 private:
     void moveCell(char &t_src, char &t_dst);
     bool isBox(char t_cell);
