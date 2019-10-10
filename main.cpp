@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
     tmp_map += "XXX.JGX ";
     tmp_map += "XGXXJ.X ";
     tmp_map += "X.X.G.XX";
-    tmp_map += "XJ.JJJGX";
+    tmp_map += "XJ.jJJGX";
     tmp_map += "X...G..X";
     tmp_map += "XXXXXXXX";
     Sokoban board(tmp_map,9,8);
