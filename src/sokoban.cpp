@@ -2,7 +2,7 @@
 
 #include "sokoban.hpp"
 
-Sokoban::Sokoban(std::string t_board, int t_cols, int t_rows)
+Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows)
 {
     m_board = t_board;
     m_rows  = t_rows;
@@ -37,11 +37,11 @@ void Sokoban::move(int t_dx, int t_dy)
 }
 
 void Sokoban::playback(std::string t_solution)
-{
-    for(int i = 0; i < t_solution.length(); i++)
-    {
-        system("clear");
-        print();
+{ 
+    system("clear");
+    print();
+    for(unsigned int i = 0; i < t_solution.length(); i++)
+    {   
         usleep(150000);
         switch(t_solution[i])
         {
@@ -57,10 +57,10 @@ void Sokoban::playback(std::string t_solution)
         case 'r': case 'R':
             move(1,0);
             break;
-        }
+        } 
+        system("clear"); // Scuffed
+        print();
     }
-    system("clear");
-    print();
 }
 
 void Sokoban::moveCell(char &t_src, char &t_dst)

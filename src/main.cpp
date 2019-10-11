@@ -7,8 +7,8 @@
 
 // Import data from filename, store in map, cols, and rows
 bool import(std::string &t_map, 
-            int &t_cols, 
-            int &t_rows, 
+            size_t &t_cols, 
+            size_t &t_rows, 
             std::string t_filename)
 {
     // Attempt to open map file
@@ -31,20 +31,20 @@ bool import(std::string &t_map,
     // Find dimensions
     t_cols = 0;
     t_rows = tmp_map.size()-1;
-    for(int i = 0; i != tmp_map.size(); i++)
+    for(unsigned int i = 0; i != tmp_map.size(); i++)
     {
         if(tmp_map[i].length() > t_cols)
             t_cols = tmp_map[i].length();
     }
 
     // Store map in string
-    for(int i = 0; i < t_rows; i++)
+    for(unsigned int i = 0; i < t_rows; i++)
     {
         t_map += tmp_map[i]; 
-        int space = (t_cols-tmp_map[i].length());
+        unsigned int space = (t_cols-tmp_map[i].length());
         if(space)
         {
-            for(int i = 0; i < space; i++)
+            for(unsigned int j = 0; j < space; j++)
                 t_map += ' ';
         }
     }
@@ -56,8 +56,8 @@ bool import(std::string &t_map,
 int main(int argc, char *argv[])
 {  
     std::string map;
-    int cols;
-    int rows;
+    size_t cols;
+    size_t rows;
 
     if(argc != 2)
     {

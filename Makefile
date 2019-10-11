@@ -1,20 +1,33 @@
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
+TARGET_EXEC = sokoban-solver.out
 
-all: sokoban-solver
+BUILD_DIR = ./build
+SRC_DIRS = ./src
 
-sokoban-solver: main.o sokoban.o
-	mkdir -p build
-	$(CXX) $(CXXFLAGS) main.o sokoban.o -o ./build/sokoban-solver
+SRCS = $(shell find $(SRC_DIRS) -name *.cpp)
+#OBJS = $(SRCS:%=$(BUILD_DIR)/%.o)
+OBJS = $(patsubst %,$(BUILD_DIR)/%,$(SRCS:.cpp=.cpp.o))
 
-main.o: main.cpp
-	$(CXX) -c main.cpp
+INC_DIRS = include
+INC_FLAGS = $(addprefix -I,$(INC_DIRS))
 
-sokoban.o: sokoban.cpp sokoban.hpp
-	$(CXX) -c sokoban.cpp
+CPP = g++
+CPPFLAGS = -std=c++17 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
+CPPFLAGS += $(INC_FLAGS)
+
+# c++ objects
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
+	$(CPP) $(OBJS) -o $@ 
+
+# c++ source
+$(BUILD_DIR)/%.cpp.o: %.cpp
+	$(MKDIR_P) $(dir $@)
+	$(CPP) $(CPPFLAGS) -c $< -o $@
+
+
+.PHONY: clean
 
 clean:
-	rm -f *.o
-	rm -f ./build/*
+	$(RM) -r $(BUILD_DIR)
 
-.PHONY: all sokoban-solver clean
+
+MKDIR_P ?= mkdir -p

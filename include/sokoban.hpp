@@ -7,7 +7,7 @@
 class Sokoban
 {
 public:
-    Sokoban(std::string t_board, int t_cols, int t_rows);
+    Sokoban(std::string t_board, size_t t_cols, size_t t_rows);
     void print();
     void move(int t_dx, int t_dy);
     void playback(std::string t_solution);
@@ -18,9 +18,9 @@ private:
     bool isWall(char t_cell);
     bool isFree(char t_cell);
     std::string m_board;
-    int m_rows;
-    int m_cols;
-    int m_agent;
+    size_t m_rows;
+    size_t m_cols;
+    unsigned int m_agent;
 };
 
 #endif
