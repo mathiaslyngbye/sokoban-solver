@@ -1,33 +1,33 @@
-TARGET_EXEC = sokoban-solver.out
+# Binary name
+TARGET_EXEC	= sokoban-solver
 
+#  directories
 BUILD_DIR = ./build
-SRC_DIRS = ./src
+SRC_DIRS  = ./src
+INC_DIRS  = include
 
+# Files
 SRCS = $(shell find $(SRC_DIRS) -name *.cpp)
-#OBJS = $(SRCS:%=$(BUILD_DIR)/%.o)
-OBJS = $(patsubst %,$(BUILD_DIR)/%,$(SRCS:.cpp=.cpp.o))
+OBJS = $(SRCS:$(SRC_DIRS)/%.cpp=$(BUILD_DIR)/%.cpp.o)
 
-INC_DIRS = include
+# Compile settings 
+CPP 	  = g++
+CPPFLAGS  = -std=c++17 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
 INC_FLAGS = $(addprefix -I,$(INC_DIRS))
-
-CPP = g++
-CPPFLAGS = -std=c++17 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
 CPPFLAGS += $(INC_FLAGS)
 
-# c++ objects
+# C++ objects
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CPP) $(OBJS) -o $@ 
 
-# c++ source
-$(BUILD_DIR)/%.cpp.o: %.cpp
+# C++ source
+$(BUILD_DIR)/%.cpp.o: $(SRC_DIRS)/%.cpp
 	$(MKDIR_P) $(dir $@)
 	$(CPP) $(CPPFLAGS) -c $< -o $@
-
 
 .PHONY: clean
 
 clean:
 	$(RM) -r $(BUILD_DIR)
-
 
 MKDIR_P ?= mkdir -p
