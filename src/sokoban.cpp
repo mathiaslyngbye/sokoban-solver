@@ -88,7 +88,7 @@ void Sokoban::moveCell(char &t_src, char &t_dst)
         else
             t_dst = 'M';
     }
-
+        
     if(isGoal(t_src))
         t_src = 'G';
     else
