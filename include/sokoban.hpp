@@ -12,8 +12,10 @@ public:
     void print();
     void move(int t_dx, int t_dy);
     void playback(std::string t_solution);
+    bool isWin();
 private:
     void moveCell(char &t_src, char &t_dst);
+    void findGoals(std::vector<size_t> &t_goals, std::string t_board);
     bool isBox(char t_cell);
     bool isGoal(char t_cell);
     bool isWall(char t_cell);
@@ -22,7 +24,8 @@ private:
     size_t m_rows;
     size_t m_cols;
     unsigned int m_agent;
-    std::vector<unsigned int> m_goals;
+    std::vector<size_t> m_goals;
 };
 
 #endif
+

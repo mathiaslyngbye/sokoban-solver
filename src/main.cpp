@@ -38,6 +38,7 @@ bool import(std::string &t_map,
     }
 
     // Store map in string
+    t_map = "";
     for(unsigned int i = 0; i < t_rows; i++)
     {
         t_map += tmp_map[i]; 
@@ -54,35 +55,29 @@ bool import(std::string &t_map,
 }
 
 int main(int argc, char *argv[])
-{  
-    std::string map;
-    size_t cols;
-    size_t rows;
-
-    if(argc != 2)
-    {
-        std::cout << "Invalid number of arguments" << std::endl;
-        return -1;
-    }
-    else
-    {
-        std::string filename = argv[1];
-        if(!import(map, cols, rows, filename))
-        {
-            std::cout << "Failed to import file " << filename << std::endl;
-            return -1;
-        }
-    } 
+{ 
+    // Initialize map with defaults
+    std::string map = "#######....##MJ..##..G.##....#######";
+    size_t cols = 6;
+    size_t rows = 6;
+    
+    // Attempt to import and override
+    if(argc != 2 || !import(map, cols, rows, argv[1]))
+        std::cout << "Import failed, using default map..." << std::endl;
     
     // Create sokoban board object
     Sokoban board(map, cols, rows);
-    board.playback("LdllluuuuRRdrUUUUdddlllddrUluRRdrUUUruLLLulDrrrddddllldddrUUUluRRdrUUUruLddddlldddrruLdlUUUluRRdrUUUruuLLLrDRurD");
 
     // Scuffed user input
-    while(0)
+    while(1)
     {
         system("clear");
         board.print();
+        if(board.isWin())
+        {
+            std::cout << "You win!" << std::endl;
+            return 0;       
+        }
         std::cout << "Input: ";
         char key;
         std::cin >> key;

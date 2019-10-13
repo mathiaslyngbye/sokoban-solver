@@ -2,12 +2,11 @@
 
 #include "sokoban.hpp"
 
-Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows)
+Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows) : 
+m_board(t_board), m_rows(t_rows), m_cols(t_cols)
 {
-    m_board = t_board;
-    m_rows  = t_rows;
-    m_cols  = t_cols;
-    m_agent = t_board.find_first_of('M');
+    m_agent = m_board.find_first_of('M');
+    findGoals(m_goals, m_board);    
 }
 
 void Sokoban::print()
@@ -63,6 +62,16 @@ void Sokoban::playback(std::string t_solution)
     }
 }
 
+bool Sokoban::isWin()
+{
+    for(size_t i = 0; i < m_goals.size(); i++)
+    {
+        if(m_board[m_goals[i]] != 'j')
+            return false;
+    }
+    return true;
+}
+
 void Sokoban::moveCell(char &t_src, char &t_dst)
 {
     if(isGoal(t_dst))
@@ -84,6 +93,15 @@ void Sokoban::moveCell(char &t_src, char &t_dst)
         t_src = 'G';
     else
         t_src = '.';
+}
+
+void Sokoban::findGoals(std::vector<size_t> &t_goals, std::string t_board)
+{
+    for(size_t i = 0; i<t_board.length();i++)
+    {
+        if(isGoal(t_board[i]))
+            t_goals.push_back(i);
+    }
 }
 
 bool Sokoban::isGoal(char t_cell)
