@@ -15,7 +15,7 @@ void Sokoban::print()
     for (unsigned int i = 0; i < (m_cols*m_rows); i++)
     {
         if (i!=0 && !(i%m_cols))
-            std::cout << std::endl;
+            std::cout << '\n';
         std::cout << m_board[i];
     }
     std::cout << std::endl; 

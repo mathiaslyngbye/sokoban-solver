@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 class Sokoban
 {
@@ -21,6 +22,7 @@ private:
     size_t m_rows;
     size_t m_cols;
     unsigned int m_agent;
+    std::vector<unsigned int> m_goals;
 };
 
 #endif
