@@ -4,6 +4,7 @@ Primary practical of course Introduction to Artificial Intelligence (T550000101)
 
 ## Game Representation
 By default, the game  board is represented by 5 ASCII characters:
+
 | Unit               | ASCII Character | 
 |--------------------|-----------------|
 | Walkable position. | `.`             |
