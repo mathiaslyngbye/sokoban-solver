@@ -7,7 +7,7 @@ By default, the game  board is represented by 5 ASCII characters:
 
 | Unit               | ASCII Character | 
 |--------------------|-----------------|
-| Walkable position. | `.`             |
+| Walkable position  | `.`             |
 | Wall               | `#`             |
 | Agent              | `M`             |
 | Box                | `J`             |
