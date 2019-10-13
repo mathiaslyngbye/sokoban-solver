@@ -1,0 +1,37 @@
+RMAI1 First Report.
+===================
+
+  The first report is due on 9th October at 12:00, and should be sent BY EMAIL as PDF
+to both john@mmmi.sdu.dk and xizi@mmmi.sdu.dk.  It may be at most 5 pages long, and
+there should be one report from each group (not individual).  Remember to include your
+GROUP NUMBER in the report text!
+
+  Apart from providing a low first hurdle for assessment, the goal of the report is to
+help you formalise the design of your Sokoban robot and get useful critique and advice
+about your approach.  Therefore, you need to consider, and write about:
+
+ 1.  What behaviours or functions will you equip the robot with, so it can complete
+     the Sokoban course successfully?
+
+ 2.  What implications do the choices in (1) have for the physical structure of the
+     robot?  What sensors will you deploy, and where?  etc.
+
+ 3.  What factors do you think will affect the speed and reliability with which your
+     robot can execute the Sokoban solution?  How will you evaluate and optimise them?
+     (Or, will you optimise them, in fact?)
+
+ 4.  How will you test and document your robot's performance for the final report?
+
+Given the length limit, you don't need to include an introduction or conclusion in the
+first report, just your thoughts on the four questions above.  You can prepare the
+report in whatever format you think is most suitable, provided the finished product
+meets the length and submission format requirements.
+
+  From past experience, a good Sokoban robot can execute a 120-step solution plan in
+2-3 minutes.  To achieve this kind of performance, you need to make the robot fast,
+stable and very very reliable.  Remember, the goal of the course practical is to
+achieve a sufficiently stable and reliable robot platform that, despite having quite
+restricted sensing and no global view of the real world, allows a symbolic reasoning
+planner to construct long plans that will execute successfully: anyone can build a
+line follower, but it takes more thought and care to build a Sokoban solving robot
+system.

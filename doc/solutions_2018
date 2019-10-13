@@ -1,0 +1,10 @@
+
+Solutions: (up, down, left, right, WHILE PUSHING)
+
+Solution 112(optimized solution):
+LdllluuuuRRdrUUUUdddlllddrUluRRdrUUUruLLLulDrrrddddllldddrUUUluRRdrUUU
+ruLddddlldddrruLdlUUUluRRdrUUUruuLLLrDRurD
+
+Solution 134 (basic solution):
+dlllluuuuRRdrUUUruLLLulDrrrdddlllddrUluRRdrUUUruLdlUruLLrrdddddllldddr
+rrruLdllUUUluRRdrUUUluRurDlddddlldddrruLdlUUUluRRdrUUUluurrdLulD
