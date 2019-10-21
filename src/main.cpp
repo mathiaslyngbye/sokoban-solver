@@ -57,7 +57,7 @@ bool import(std::string &t_map,
 int main(int argc, char *argv[])
 { 
     // Initialize map with defaults
-    std::string map = "#######....##mJ..##..G.##....#######";
+    std::string map = "#######....##MJ..##..G.##....#######";
     size_t cols = 6;
     size_t rows = 6;
     
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     // Scuffed user input
     while(1)
     {
-        system("clear");
+
         board.print();
         if(board.isWin())
         {
@@ -82,23 +82,26 @@ int main(int argc, char *argv[])
         char key;
         std::cin >> key;
 
+        system("clear");
+        std::cout << "Move status: ";
         switch(key)
         {
         case 'a':
-            board.move(-1,0);
+            std::cout << board.move(-1,0);
             break;
         case 's':
-            board.move(0,1);
+            std::cout << board.move(0,1);
             break;
         case 'd':
-            board.move(1,0);
+            std::cout << board.move(1,0);
             break;
         case 'w':
-            board.move(0,-1);
+            std::cout << board.move(0,-1);
             break;
         default:
             return 0;
         }
+        std::cout << std::endl;
     }
     return 0;
 }
