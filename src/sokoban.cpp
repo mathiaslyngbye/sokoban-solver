@@ -5,7 +5,7 @@
 Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows) : 
 m_board(t_board), m_rows(t_rows), m_cols(t_cols)
 {
-    m_agent = m_board.find_first_of('M');
+    m_agent = m_board.find_first_of("Mm");
     findGoals(m_goals, m_board);    
 }
 

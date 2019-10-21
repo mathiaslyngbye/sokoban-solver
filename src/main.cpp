@@ -57,7 +57,7 @@ bool import(std::string &t_map,
 int main(int argc, char *argv[])
 { 
     // Initialize map with defaults
-    std::string map = "#######....##MJ..##..G.##....#######";
+    std::string map = "#######....##mJ..##..G.##....#######";
     size_t cols = 6;
     size_t rows = 6;
     
