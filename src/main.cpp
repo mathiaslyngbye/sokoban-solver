@@ -57,7 +57,7 @@ bool import(std::string &t_map,
 int main(int argc, char *argv[])
 { 
     // Initialize map with defaults
-    std::string map = "#######....##MJ..##..G.##....#######";
+    std::string map = "XXXXXXX....XXMJ..XX..G.XX....XXXXXXX";
     size_t cols = 6;
     size_t rows = 6;
     
@@ -66,17 +66,22 @@ int main(int argc, char *argv[])
         std::cout << "Import failed, using default map..." << std::endl;
     
     // Create sokoban board object
-    Sokoban board(map, cols, rows);
+    Sokoban board(map, cols, rows);  
 
     // Scuffed user input
+    system("clear");
     while(1)
     {
-
         board.print();
         if(board.isWin())
         {
             std::cout << "You win!" << std::endl;
             return 0;       
+        }
+        if(board.isStuck())
+        {
+            std::cout << "You are stuck!" << std::endl;
+            return 0;
         }
         std::cout << "Input: ";
         char key;

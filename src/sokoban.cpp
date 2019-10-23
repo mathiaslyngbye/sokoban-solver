@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <queue>
 
 #include "sokoban.hpp"
 
@@ -6,7 +7,8 @@ Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows) :
 m_board(t_board), m_rows(t_rows), m_cols(t_cols)
 {
     m_agent = m_board.find_first_of("Mm");
-    findGoals(m_goals, m_board);    
+    findGoals(m_goals, m_board);
+    findCorners(m_corners, m_board);
 }
 
 void Sokoban::print()
@@ -36,7 +38,27 @@ bool Sokoban::move(int t_dx, int t_dy)
     }
     else
         return false;
+}
 
+bool Sokoban::solve()
+{
+    // OpenList
+    std::queue<std::vector<std::string>> open;
+    // Create visited tree
+    // Create open queue
+
+    // Push start state to open queue
+    // Insert start state in visited tree
+
+    int dirs[4][2] = {
+        { 0,-1},    // Up
+        { 1, 0},    // Right
+        { 0, 1},    // Down
+        {-1, 0}     // Left
+    };
+    dirs[2][0]++;     // Remove silly warning until we put something here
+
+    return false;
 }
 
 void Sokoban::playback(std::string t_solution)
@@ -76,6 +98,16 @@ bool Sokoban::isWin()
     return true;
 }
 
+bool Sokoban::isStuck()
+{
+    for(size_t i = 0; i < m_corners.size(); i++)
+    {
+        if(isBox(m_board[m_corners[i]]))
+            return true;
+    }
+    return false;
+}
+
 void Sokoban::moveCell(char &t_src, char &t_dst)
 {
     if(isGoal(t_dst))
@@ -108,6 +140,17 @@ void Sokoban::findGoals(std::vector<size_t> &t_goals, std::string t_board)
     }
 }
 
+void Sokoban::findCorners(std::vector<size_t> &t_corners, std::string t_board)
+{
+    for(size_t i = 0; i < t_board.length(); i++)
+    {
+        if( isFree(t_board[i]) &&
+            (isWall(t_board[i-m_cols]) || isWall(t_board[i+m_cols])) &&
+            (isWall(t_board[i-1]) || isWall(t_board[i+1]))) 
+            t_corners.push_back(i);
+    }
+}
+
 bool Sokoban::isGoal(char t_cell)
 {
     return (t_cell == 'm' || 
@@ -122,10 +165,15 @@ bool Sokoban::isBox(char t_cell)
 
 bool Sokoban::isWall(char t_cell)
 {
-    return (t_cell == '#');
+    return (t_cell == 'X');
 }
 
 bool Sokoban::isFree(char t_cell)
 {
     return (t_cell == '.' || t_cell == 'G');
+}
+
+bool Sokoban::isAgent(char t_cell)
+{
+    return (t_cell == 'M' || t_cell == 'm');
 }
