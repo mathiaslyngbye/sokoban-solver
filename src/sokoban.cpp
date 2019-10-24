@@ -1,6 +1,7 @@
 #include <unistd.h>
+#include <array>
 #include <queue>
-
+#include <algorithm>
 #include "sokoban.hpp"
 
 Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows) : 
@@ -9,6 +10,7 @@ m_board(t_board), m_rows(t_rows), m_cols(t_cols)
     m_agent = m_board.find_first_of("Mm");
     findGoals(m_goals, m_board);
     findCorners(m_corners, m_board);
+    findEdges(m_edges, m_board);
 }
 
 void Sokoban::print()
@@ -42,22 +44,61 @@ bool Sokoban::move(int t_dx, int t_dy)
 
 bool Sokoban::solve()
 {
-    // OpenList
-    std::queue<std::vector<std::string>> open;
-    // Create visited tree
-    // Create open queue
-
-    // Push start state to open queue
-    // Insert start state in visited tree
-
+    // Define movements
     int dirs[4][2] = {
         { 0,-1},    // Up
         { 1, 0},    // Right
         { 0, 1},    // Down
         {-1, 0}     // Left
     };
-    dirs[2][0]++;     // Remove silly warning until we put something here
+    
+    char dirs_c[4] = {'u','r','d','l'};
 
+    // Create visited list
+    std::vector<std::string> visited;
+    
+    // Create open queue
+    std::queue<std::array<std::string, 2>> open;
+
+    // Push start state to open queue
+    std::array<std::string,2> tmp_state = {m_board, ""};
+    open.push(tmp_state);
+
+    // Insert start state in visited tree
+    visited.push_back(m_board);
+    
+    while(!open.empty())
+    {
+        std::string tmp_board = open.front()[0];
+        std::string tmp_sol   = open.front()[1];
+        size_t tmp_agent      = tmp_board.find_first_of("Mm");
+
+        for(size_t i = 0; i<4; i++)
+        {
+            m_board = tmp_board;
+            m_agent = tmp_agent;
+
+            move(dirs[i][0], dirs[i][1]);
+            if (!(std::find(visited.begin(), visited.end(),m_board) 
+                != visited.end()))
+            {
+                if(isWin())
+                {
+                    std::cout << std::endl << tmp_sol+dirs_c[i] << std::endl;
+                    print();
+                    return true;
+                }
+                if(!isStuck())
+                {
+                    std::array<std::string,2> tmp_state = {
+                        m_board, tmp_sol+dirs_c[i] };
+                    open.push(tmp_state);
+                    visited.push_back(m_board);
+                }
+            }      
+        }
+        open.pop();
+    }
     return false;
 }
 
@@ -149,6 +190,38 @@ void Sokoban::findCorners(std::vector<size_t> &t_corners, std::string t_board)
             (isWall(t_board[i-1]) || isWall(t_board[i+1]))) 
             t_corners.push_back(i);
     }
+}
+
+void Sokoban::findEdges(std::vector<size_t> &t_edges, std::string t_board)
+{    
+    for(size_t i = 0; i < m_rows; i++)
+    {
+        bool wallFlag0 = false;
+        bool wallFlag1 = false;
+        bool edgeFlag = false;
+
+        for(size_t j = 0; j < m_cols; j++)
+        {
+            std::vector<int> tmp_edge;
+            
+            wallFlag0 = wallFlag1;
+            wallFlag1 = !isFree(t_board[i*m_cols+j]);
+            
+            if(wallFlag0 && !wallFlag1)
+                edgeFlag = true;
+            else if (!wallFlag0 && !wallFlag1)
+                edgeFlag = false;
+
+            if(edgeFlag)
+            {
+                tmp_edge.push_back(i*m_cols+j);
+                //std::cout << "I'm retarded" << std::endl;
+            }
+            else
+                tmp_edge.clear();
+        }
+    }
+
 }
 
 bool Sokoban::isGoal(char t_cell)

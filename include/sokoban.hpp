@@ -19,6 +19,7 @@ private:
     void moveCell(char &t_src, char &t_dst);
     void findGoals(std::vector<size_t> &t_goals, std::string t_board);
     void findCorners(std::vector<size_t> &t_corners, std::string t_board);
+    void findEdges(std::vector<size_t> &t_edges, std::string t_board);
     bool isBox(char t_cell);
     bool isGoal(char t_cell);
     bool isWall(char t_cell);
@@ -30,6 +31,7 @@ private:
     unsigned int m_agent;
     std::vector<size_t> m_goals;
     std::vector<size_t> m_corners;
+    std::vector<size_t> m_edges;
 };
 
 #endif

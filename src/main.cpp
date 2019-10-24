@@ -57,20 +57,35 @@ bool import(std::string &t_map,
 int main(int argc, char *argv[])
 { 
     // Initialize map with defaults
-    std::string map = "XXXXXXX....XXMJ..XX..G.XX....XXXXXXX";
+    std::string map =   "XXXXXX";
+    map +=              "X....X";
+    map +=              "XMJ..X";
+    map +=              "X....X";
+    map +=              "X...GX";
+    map +=              "XXXXXX";
     size_t cols = 6;
     size_t rows = 6;
     
     // Attempt to import and override
+    std::cout << "Importing map file... ";
     if(argc != 2 || !import(map, cols, rows, argv[1]))
-        std::cout << "Import failed, using default map..." << std::endl;
+    {
+        std::cout << "Failed!" << std::endl;
+        std::cout << "Using default map... ";
+    }
+    std::cout << "Done!" << std::endl;
     
     // Create sokoban board object
     Sokoban board(map, cols, rows);  
+    
+    // Attempting solve
+    std::cout << "Solving sokoban... ";
+    board.solve();
+    std::cout << "Done!" << std::endl;
 
     // Scuffed user input
-    system("clear");
-    while(1)
+    //system("clear");
+    while(0)
     {
         board.print();
         if(board.isWin())
