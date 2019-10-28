@@ -1,0 +1,17 @@
+Time1: xizi map, no optimization    
+
+real    1m37.984s
+user    1m37.963s
+sys     0m0.016s
+
+Time2 xizi map, check valid move first
+
+real    1m10.605s
+user    1m10.590s
+sys     0m0.012s
+
+Time3: xizi map, replace vector with set
+
+real    0m0.298s
+user    0m0.286s
+sys     0m0.012s
