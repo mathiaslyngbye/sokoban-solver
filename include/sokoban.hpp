@@ -12,14 +12,15 @@ public:
     void print();
     bool move(int t_dx, int t_dy);
     bool solve();
+    void play();
     void playback(std::string t_solution);
-    bool isWin();
-    bool isStuck();
 private:
     void moveCell(char &t_src, char &t_dst);
     void findGoals(std::vector<size_t> &t_goals, std::string t_board);
     void findCorners(std::vector<size_t> &t_corners, std::string t_board);
     void findEdges(std::vector<size_t> &t_edges, std::string t_board);
+    bool isWin();
+    bool isStuck();
     bool isBox(char t_cell);
     bool isGoal(char t_cell);
     bool isWall(char t_cell);

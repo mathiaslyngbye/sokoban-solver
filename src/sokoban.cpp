@@ -66,6 +66,9 @@ bool Sokoban::solve()
 
     // Insert start state in visited tree
     visited.push_back(m_board);
+     
+    size_t last_depth = 0;
+    size_t curr_depth = 0;
     
     while(!open.empty())
     {
@@ -73,6 +76,18 @@ bool Sokoban::solve()
         std::string tmp_sol   = open.front()[1];
         size_t tmp_agent      = tmp_board.find_first_of("Mm");
 
+        last_depth = curr_depth;
+        curr_depth = tmp_sol.length();
+
+        if(last_depth != curr_depth)
+        {
+            std::cout << "Depth:\t" << curr_depth << std::endl;
+            std::cout << "Open:\t"  << open.size() << std::endl; 
+            std::cout << "Closed:\t" << visited.size() << std::endl;
+            std::cout << std::endl; 
+        }
+
+        
         for(size_t i = 0; i<4; i++)
         {
             m_board = tmp_board;
@@ -97,9 +112,57 @@ bool Sokoban::solve()
                 }
             }      
         }
+        
         open.pop();
     }
     return false;
+}
+
+void Sokoban::play() 
+{
+    // Scuffed user input
+    std::string tmp_board = m_board;
+    int tmp_agent = m_agent;
+
+    system("clear");
+    while(1)
+    {
+        print();
+        if(isWin())
+        {
+            std::cout << "You win!" << std::endl;
+        }
+        if(isStuck())
+        {
+            std::cout << "You are stuck!" << std::endl;
+        }
+        std::cout << "Input: ";
+        char key;
+        std::cin >> key;
+
+        system("clear");
+        switch(key)
+        {
+        case 'a':
+            move(-1,0);
+            break;
+        case 's':
+            move(0,1);
+            break;
+        case 'd':
+            move(1,0);
+            break;
+        case 'w':
+            move(0,-1);
+            break;
+        case 'r':
+            m_board = tmp_board;
+            m_agent = tmp_agent;
+            break;
+        default:
+            return;
+        }
+    }
 }
 
 void Sokoban::playback(std::string t_solution)
@@ -185,7 +248,7 @@ void Sokoban::findCorners(std::vector<size_t> &t_corners, std::string t_board)
 {
     for(size_t i = 0; i < t_board.length(); i++)
     {
-        if( isFree(t_board[i]) &&
+        if( isFree(t_board[i]) && !isGoal(t_board[i]) &&
             (isWall(t_board[i-m_cols]) || isWall(t_board[i+m_cols])) &&
             (isWall(t_board[i-1]) || isWall(t_board[i+1]))) 
             t_corners.push_back(i);

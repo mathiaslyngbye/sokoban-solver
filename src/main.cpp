@@ -78,50 +78,17 @@ int main(int argc, char *argv[])
     // Create sokoban board object
     Sokoban board(map, cols, rows);  
     
+    // Play game 
+    board.play();
+
+    /*
     // Attempting solve
-    std::cout << "Solving sokoban... ";
-    board.solve();
-    std::cout << "Done!" << std::endl;
+    std::cout << "Solving sokoban... " << std::endl;
+    if(board.solve()) 
+        std::cout << "Done!" << std::endl;
+    else
+        std::cout << "Failed!" << std::endl;
+    */
 
-    // Scuffed user input
-    //system("clear");
-    while(0)
-    {
-        board.print();
-        if(board.isWin())
-        {
-            std::cout << "You win!" << std::endl;
-            return 0;       
-        }
-        if(board.isStuck())
-        {
-            std::cout << "You are stuck!" << std::endl;
-            return 0;
-        }
-        std::cout << "Input: ";
-        char key;
-        std::cin >> key;
-
-        system("clear");
-        std::cout << "Move status: ";
-        switch(key)
-        {
-        case 'a':
-            std::cout << board.move(-1,0);
-            break;
-        case 's':
-            std::cout << board.move(0,1);
-            break;
-        case 'd':
-            std::cout << board.move(1,0);
-            break;
-        case 'w':
-            std::cout << board.move(0,-1);
-            break;
-        default:
-            return 0;
-        }
-        std::cout << std::endl;
-    }
     return 0;
 }
