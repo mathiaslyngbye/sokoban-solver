@@ -2,6 +2,8 @@
 #include <array>
 #include <queue>
 #include <algorithm>
+#include <set>
+
 #include "sokoban.hpp"
 
 Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows) : 
@@ -24,14 +26,19 @@ void Sokoban::print()
     std::cout << std::endl; 
 }
 
-bool Sokoban::move(int t_dx, int t_dy)
+bool Sokoban::move(int t_dx, int t_dy, bool &t_push)
 {
     int agent_m1 = m_agent + (t_dx + t_dy*m_cols);
     int agent_m2 = m_agent + (2*t_dx + 2*t_dy*m_cols);
-     
-    if(isBox(m_board[agent_m1]) && isFree(m_board[agent_m2]))
-        moveCell(m_board[agent_m1], m_board[agent_m2]);
     
+    t_push = false;
+
+    if(isBox(m_board[agent_m1]) && isFree(m_board[agent_m2]))
+    {
+        moveCell(m_board[agent_m1], m_board[agent_m2]);
+        t_push = true;
+    }
+
     if(isFree(m_board[agent_m1]))
     {
         moveCell(m_board[m_agent], m_board[agent_m1]);
@@ -53,9 +60,11 @@ bool Sokoban::solve()
     };
     
     char dirs_c[4] = {'u','r','d','l'};
+    char dirs_c_cap[4] = {'U','R','D','L'};
 
     // Create visited list
-    std::vector<std::string> visited;
+    //std::vector<std::string> visited;
+    std::set<std::string> closed;
     
     // Create open queue
     std::queue<std::array<std::string, 2>> open;
@@ -65,8 +74,9 @@ bool Sokoban::solve()
     open.push(tmp_state);
 
     // Insert start state in visited tree
-    visited.push_back(m_board);
-     
+    //visited.push_back(m_board);
+    closed.insert(m_board);
+
     size_t last_depth = 0;
     size_t curr_depth = 0;
     
@@ -83,34 +93,44 @@ bool Sokoban::solve()
         {
             std::cout << "Depth:\t" << curr_depth << std::endl;
             std::cout << "Open:\t"  << open.size() << std::endl; 
-            std::cout << "Closed:\t" << visited.size() << std::endl;
+            //std::cout << "Closed:\t" << visited.size() << std::endl;
             std::cout << std::endl; 
         }
 
         
         for(size_t i = 0; i<4; i++)
         {
+            bool tmp_push = false;
             m_board = tmp_board;
             m_agent = tmp_agent;
 
-            move(dirs[i][0], dirs[i][1]);
-            if (!(std::find(visited.begin(), visited.end(),m_board) 
-                != visited.end()))
+            if(move(dirs[i][0], dirs[i][1], tmp_push))
             {
-                if(isWin())
+               // if (!(std::find(visited.begin(), visited.end(),m_board) != visited.end()))
+                if(closed.find(m_board) == closed.end())
                 {
-                    std::cout << std::endl << tmp_sol+dirs_c[i] << std::endl;
-                    print();
-                    return true;
+                    char tmp_dir = ' ';
+                    if(tmp_push)
+                        tmp_dir = dirs_c_cap[i];
+                    else
+                        tmp_dir = dirs_c[i];
+                    
+                    if(isWin())
+                    {
+                        std::cout << tmp_sol+tmp_dir << std::endl;
+                        print();
+                        return true;
+                    }
+                    if(!isStuck())
+                    {
+                        std::array<std::string,2> tmp_state = {
+                            m_board, tmp_sol+tmp_dir };
+                        open.push(tmp_state);
+                        //visited.push_back(m_board);
+                        closed.insert(m_board);
+                    }
                 }
-                if(!isStuck())
-                {
-                    std::array<std::string,2> tmp_state = {
-                        m_board, tmp_sol+dirs_c[i] };
-                    open.push(tmp_state);
-                    visited.push_back(m_board);
-                }
-            }      
+            }
         }
         
         open.pop();
@@ -127,6 +147,7 @@ void Sokoban::play()
     system("clear");
     while(1)
     {
+        bool tmp_push = false;
         print();
         if(isWin())
         {
@@ -144,16 +165,16 @@ void Sokoban::play()
         switch(key)
         {
         case 'a':
-            move(-1,0);
+            move(-1,0,tmp_push);
             break;
         case 's':
-            move(0,1);
+            move(0,1,tmp_push);
             break;
         case 'd':
-            move(1,0);
+            move(1,0,tmp_push);
             break;
         case 'w':
-            move(0,-1);
+            move(0,-1,tmp_push);
             break;
         case 'r':
             m_board = tmp_board;
@@ -167,6 +188,7 @@ void Sokoban::play()
 
 void Sokoban::playback(std::string t_solution)
 { 
+    bool tmp_push = false;
     system("clear");
     print();
     for(unsigned int i = 0; i < t_solution.length(); i++)
@@ -175,16 +197,16 @@ void Sokoban::playback(std::string t_solution)
         switch(t_solution[i])
         {
         case 'u': case 'U':
-            move(0,-1);
+            move(0,-i, tmp_push);
             break;
         case 'd': case 'D':
-            move(0,1);
+            move(0,1,tmp_push);
             break;
         case 'l': case 'L':
-            move(-1,0);
+            move(-1,0,tmp_push);
             break;
         case 'r': case 'R':
-            move(1,0);
+            move(1,0,tmp_push);
             break;
         } 
         system("clear"); // Scuffed

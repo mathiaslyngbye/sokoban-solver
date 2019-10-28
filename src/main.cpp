@@ -79,16 +79,16 @@ int main(int argc, char *argv[])
     Sokoban board(map, cols, rows);  
     
     // Play game 
-    board.play();
+    //board.play();
 
-    /*
+    
     // Attempting solve
     std::cout << "Solving sokoban... " << std::endl;
     if(board.solve()) 
         std::cout << "Done!" << std::endl;
     else
         std::cout << "Failed!" << std::endl;
-    */
+    
 
     return 0;
 }

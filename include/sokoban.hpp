@@ -10,7 +10,7 @@ class Sokoban
 public:
     Sokoban(std::string t_board, size_t t_cols, size_t t_rows);
     void print();
-    bool move(int t_dx, int t_dy);
+    bool move(int t_dx, int t_dy, bool &t_push);
     bool solve();
     void play();
     void playback(std::string t_solution);
