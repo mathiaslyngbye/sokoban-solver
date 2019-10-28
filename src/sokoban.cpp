@@ -51,19 +51,16 @@ bool Sokoban::move(int t_dx, int t_dy, bool &t_push)
 
 bool Sokoban::solve()
 {
-    // Define movements
+    // Define movement arrays
     int dirs[4][2] = {
         { 0,-1},    // Up
         { 1, 0},    // Right
         { 0, 1},    // Down
         {-1, 0}     // Left
-    };
-    
+    }; 
     char dirs_c[4] = {'u','r','d','l'};
-    char dirs_c_cap[4] = {'U','R','D','L'};
 
-    // Create visited list
-    //std::vector<std::string> visited;
+    // Create closed set
     std::set<std::string> closed;
     
     // Create open queue
@@ -74,65 +71,69 @@ bool Sokoban::solve()
     open.push(tmp_state);
 
     // Insert start state in visited tree
-    //visited.push_back(m_board);
     closed.insert(m_board);
 
+    // Initialize depth variables
     size_t last_depth = 0;
     size_t curr_depth = 0;
     
     while(!open.empty())
     {
+        // Fetch data of node
         std::string tmp_board = open.front()[0];
         std::string tmp_sol   = open.front()[1];
         size_t tmp_agent      = tmp_board.find_first_of("Mm");
 
+        // Print debug info on depth change
         last_depth = curr_depth;
         curr_depth = tmp_sol.length();
-
         if(last_depth != curr_depth)
         {
             std::cout << "Depth:\t" << curr_depth << std::endl;
             std::cout << "Open:\t"  << open.size() << std::endl; 
-            //std::cout << "Closed:\t" << visited.size() << std::endl;
+            std::cout << "Closed:\t" << closed.size() << std::endl;
             std::cout << std::endl; 
         }
-
         
+        // Generate children
         for(size_t i = 0; i<4; i++)
         {
-            bool tmp_push = false;
+            // Reset board 
             m_board = tmp_board;
             m_agent = tmp_agent;
-
+            
+            // Perform move
+            bool tmp_push = false;
             if(move(dirs[i][0], dirs[i][1], tmp_push))
             {
-               // if (!(std::find(visited.begin(), visited.end(),m_board) != visited.end()))
                 if(closed.find(m_board) == closed.end())
                 {
-                    char tmp_dir = ' ';
+                    // Capitalize direction letter if pushing
+                    char tmp_dir = dirs_c[i];
                     if(tmp_push)
-                        tmp_dir = dirs_c_cap[i];
-                    else
-                        tmp_dir = dirs_c[i];
-                    
+                        tmp_dir -= 'a'-'A';
+
+                    // Check if state is won
                     if(isWin())
                     {
                         std::cout << tmp_sol+tmp_dir << std::endl;
                         print();
                         return true;
                     }
+
+                    // Check if state is stuck
                     if(!isStuck())
                     {
-                        std::array<std::string,2> tmp_state = {
+                        std::array<std::string,2> cur_state = {
                             m_board, tmp_sol+tmp_dir };
-                        open.push(tmp_state);
-                        //visited.push_back(m_board);
+                        open.push(cur_state);
                         closed.insert(m_board);
                     }
                 }
             }
         }
         
+        //Remove front queue element
         open.pop();
     }
     return false;
@@ -140,10 +141,10 @@ bool Sokoban::solve()
 
 void Sokoban::play() 
 {
-    // Scuffed user input
     std::string tmp_board = m_board;
     int tmp_agent = m_agent;
-
+    std::string tmp_sol = "";
+    
     system("clear");
     while(1)
     {
@@ -152,37 +153,48 @@ void Sokoban::play()
         if(isWin())
         {
             std::cout << "You win!" << std::endl;
+            std::cout << "Your solution: "<< tmp_sol << std::endl;
+            return;
         }
         if(isStuck())
         {
             std::cout << "You are stuck!" << std::endl;
+            std::cout << "Input 'r' to reset." << std::endl;
         }
         std::cout << "Input: ";
         char key;
         std::cin >> key;
 
         system("clear");
+ 
+        char tmp_dir = ' ';
         switch(key)
         {
         case 'a':
             move(-1,0,tmp_push);
+            tmp_dir = 'l' - (32*tmp_push);
             break;
         case 's':
             move(0,1,tmp_push);
+            tmp_dir = 'd' - (32*tmp_push);
             break;
         case 'd':
             move(1,0,tmp_push);
+            tmp_dir = 'r' - (32*tmp_push);
             break;
         case 'w':
             move(0,-1,tmp_push);
+            tmp_dir = 'u' - (32*tmp_push);
             break;
         case 'r':
             m_board = tmp_board;
             m_agent = tmp_agent;
+            tmp_sol = "";
             break;
         default:
             return;
         }
+        tmp_sol += tmp_dir;
     }
 }
 
@@ -209,11 +221,16 @@ void Sokoban::playback(std::string t_solution)
             move(1,0,tmp_push);
             break;
         } 
-        system("clear"); // Scuffed
+        system("clear");
         print();
     }
 }
 
+void Sokoban::to_csv(std::string t_solution, 
+    std::string t_filename = "directions")
+{
+    ;
+}
 bool Sokoban::isWin()
 {
     for(size_t i = 0; i < m_goals.size(); i++)
@@ -285,6 +302,7 @@ void Sokoban::findEdges(std::vector<size_t> &t_edges, std::string t_board)
         bool wallFlag1 = false;
         bool edgeFlag = false;
 
+        std::vector<size_t> tmp_edges = t_edges; // Remove warning for now
         for(size_t j = 0; j < m_cols; j++)
         {
             std::vector<int> tmp_edge;
@@ -300,7 +318,6 @@ void Sokoban::findEdges(std::vector<size_t> &t_edges, std::string t_board)
             if(edgeFlag)
             {
                 tmp_edge.push_back(i*m_cols+j);
-                //std::cout << "I'm retarded" << std::endl;
             }
             else
                 tmp_edge.clear();

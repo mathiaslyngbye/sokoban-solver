@@ -14,6 +14,7 @@ public:
     bool solve();
     void play();
     void playback(std::string t_solution);
+    void to_csv(std::string, std::string);
 private:
     void moveCell(char &t_src, char &t_dst);
     void findGoals(std::vector<size_t> &t_goals, std::string t_board);
