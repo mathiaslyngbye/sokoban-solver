@@ -123,8 +123,7 @@ bool Sokoban::solve(std::string &t_solution)
                         t_solution = tmp_sol+tmp_dir;
                         return true;
                     }
-
-                    // Check if state is stuck
+                    
                     if( !tmp_push ||
                         !isStuck(m_agent + dirs[i][0] + dirs[i][1]*m_cols))
                     {
@@ -133,6 +132,7 @@ bool Sokoban::solve(std::string &t_solution)
                         open.push(cur_state);
                         closed.insert(m_board);
                     }
+                    
                 }
             }
         }

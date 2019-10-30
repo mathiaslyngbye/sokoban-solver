@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     
     // Create sokoban board object
     Sokoban board(map, cols, rows);  
-    board.print(); 
+    //board.print(); 
     
     // Solve
     std::string solution = "";
