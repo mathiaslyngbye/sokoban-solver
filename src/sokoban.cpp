@@ -10,9 +10,13 @@ Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows) :
 m_board(t_board), m_rows(t_rows), m_cols(t_cols)
 {
     m_agent = m_board.find_first_of("Mm");
-    findGoals(m_goals, m_board);
-    findCorners(m_corners, m_board);
-    findEdges(m_edges, m_board);
+    findGoals(m_goals);
+    findCorners(m_corners);
+    findEdges(m_edges);
+
+	std::merge( m_corners.begin(),  m_corners.end(),
+				m_edges.begin(),    m_edges.end(),
+				std::inserter(m_stuck, m_stuck.begin()));
 }
 
 void Sokoban::print()
@@ -49,7 +53,7 @@ bool Sokoban::move(int t_dx, int t_dy, bool &t_push)
         return false;
 }
 
-bool Sokoban::solve()
+bool Sokoban::solve(std::string &t_solution)
 {
     // Define movement arrays
     int dirs[4][2] = {
@@ -89,9 +93,9 @@ bool Sokoban::solve()
         curr_depth = tmp_sol.length();
         if(last_depth != curr_depth)
         {
-            std::cout << "Depth:\t" << curr_depth << std::endl;
-            std::cout << "Open:\t"  << open.size() << std::endl; 
-            std::cout << "Closed:\t" << closed.size() << std::endl;
+            std::cout << "Depth:\t"  << curr_depth    << '\t';
+            std::cout << "Open:\t"   << open.size()   << '\t'; 
+            std::cout << "Closed:\t" << closed.size() << '\t';
             std::cout << std::endl; 
         }
         
@@ -116,13 +120,13 @@ bool Sokoban::solve()
                     // Check if state is won
                     if(isWin())
                     {
-                        std::cout << tmp_sol+tmp_dir << std::endl;
-                        print();
+                        t_solution = tmp_sol+tmp_dir;
                         return true;
                     }
 
                     // Check if state is stuck
-                    if(!isStuck())
+                    if( !tmp_push ||
+                        !isStuck(m_agent + dirs[i][0] + dirs[i][1]*m_cols))
                     {
                         std::array<std::string,2> cur_state = {
                             m_board, tmp_sol+tmp_dir };
@@ -145,7 +149,9 @@ void Sokoban::play()
     int tmp_agent = m_agent;
     std::string tmp_sol = "";
     
-    system("clear");
+    if (!(std::system("clear")))
+        return;
+
     while(1)
     {
         bool tmp_push = false;
@@ -165,7 +171,8 @@ void Sokoban::play()
         char key;
         std::cin >> key;
 
-        system("clear");
+        if (!(std::system("clear")))
+            return;
  
         char tmp_dir = ' ';
         switch(key)
@@ -201,7 +208,8 @@ void Sokoban::play()
 void Sokoban::playback(std::string t_solution)
 { 
     bool tmp_push = false;
-    system("clear");
+    if (!(std::system("clear")))
+        return;
     print();
     for(unsigned int i = 0; i < t_solution.length(); i++)
     {   
@@ -209,7 +217,7 @@ void Sokoban::playback(std::string t_solution)
         switch(t_solution[i])
         {
         case 'u': case 'U':
-            move(0,-i, tmp_push);
+            move(0,-1, tmp_push);
             break;
         case 'd': case 'D':
             move(0,1,tmp_push);
@@ -221,21 +229,25 @@ void Sokoban::playback(std::string t_solution)
             move(1,0,tmp_push);
             break;
         } 
-        system("clear");
+        
+        if (!(std::system("clear")))
+            return;
         print();
     }
 }
 
 void Sokoban::to_csv(std::string t_solution, 
-    std::string t_filename = "directions")
+    std::string t_filename = "instructions")
 {
-    ;
+    std::cout << "Exporting solution:\n" << t_solution << std::endl;
+    std::cout << "To file:\n" << t_filename << std::endl;
 }
+
 bool Sokoban::isWin()
 {
-    for(size_t i = 0; i < m_goals.size(); i++)
+    for(const auto &it : m_goals)
     {
-        if(m_board[m_goals[i]] != 'j')
+        if(m_board[it] != 'j')
             return false;
     }
     return true;
@@ -243,12 +255,17 @@ bool Sokoban::isWin()
 
 bool Sokoban::isStuck()
 {
-    for(size_t i = 0; i < m_corners.size(); i++)
+    for(const auto &it : m_stuck)
     {
-        if(isBox(m_board[m_corners[i]]))
+        if(isBox(m_board[it]))
             return true;
     }
     return false;
+}
+
+bool Sokoban::isStuck(size_t t_cell)
+{
+    return !(m_stuck.find(t_cell) == m_stuck.end());
 }
 
 void Sokoban::moveCell(char &t_src, char &t_dst)
@@ -274,56 +291,84 @@ void Sokoban::moveCell(char &t_src, char &t_dst)
         t_src = '.';
 }
 
-void Sokoban::findGoals(std::vector<size_t> &t_goals, std::string t_board)
+void Sokoban::findGoals(std::set<size_t> &t_goals)
 {
-    for(size_t i = 0; i<t_board.length();i++)
+    for(size_t i = 0; i<m_board.length();i++)
     {
-        if(isGoal(t_board[i]))
-            t_goals.push_back(i);
+        if(isGoal(m_board[i]))
+            t_goals.insert(i);
     }
 }
 
-void Sokoban::findCorners(std::vector<size_t> &t_corners, std::string t_board)
+void Sokoban::findCorners(std::set<size_t> &t_corners)
 {
-    for(size_t i = 0; i < t_board.length(); i++)
+    t_corners.clear();
+    for(size_t i = 0; i < m_board.length(); i++)
     {
-        if( isFree(t_board[i]) && !isGoal(t_board[i]) &&
-            (isWall(t_board[i-m_cols]) || isWall(t_board[i+m_cols])) &&
-            (isWall(t_board[i-1]) || isWall(t_board[i+1]))) 
-            t_corners.push_back(i);
+        if( isFree(m_board[i])  && 
+            !isGoal(m_board[i]) &&
+            (isWall(m_board[i-m_cols])  || isWall(m_board[i+m_cols])) &&
+            (isWall(m_board[i-1])       || isWall(m_board[i+1]))) 
+            t_corners.insert(i);
     }
 }
 
-void Sokoban::findEdges(std::vector<size_t> &t_edges, std::string t_board)
+void Sokoban::findEdges(std::set<size_t> &t_edges)
 {    
-    for(size_t i = 0; i < m_rows; i++)
+    t_edges.clear();
+    for(const auto &it_i : m_corners)
     {
-        bool wallFlag0 = false;
-        bool wallFlag1 = false;
-        bool edgeFlag = false;
-
-        std::vector<size_t> tmp_edges = t_edges; // Remove warning for now
-        for(size_t j = 0; j < m_cols; j++)
-        {
-            std::vector<int> tmp_edge;
-            
-            wallFlag0 = wallFlag1;
-            wallFlag1 = !isFree(t_board[i*m_cols+j]);
-            
-            if(wallFlag0 && !wallFlag1)
-                edgeFlag = true;
-            else if (!wallFlag0 && !wallFlag1)
-                edgeFlag = false;
-
-            if(edgeFlag)
+        for(const auto &it_j : m_corners)
+        {  
+            if( it_i < it_j )
             {
-                tmp_edge.push_back(i*m_cols+j);
+                std::set<size_t> edge; 
+                
+                // Check horizontal stuck walls
+                if( (it_i/m_cols) == (it_j/m_cols) )
+                {
+                    for(size_t k = 0; k < (it_j-it_i)+1; k++)
+                    {
+                        if( (isWall((m_board[it_i+k-m_cols])) ||
+                            isWall((m_board[it_i+k+m_cols]))) &&
+                            !isGoal(m_board[it_i+k]) &&
+                            (isFree(m_board[it_i+k])||
+                            isAgent(m_board[it_i+k])))
+                        {
+                            edge.insert(it_i+k);
+                        }
+                        else
+                        {
+                            edge.clear();
+                            break;
+                        }
+                    }
+                }
+                else if( (it_i%m_cols) == (it_j%m_cols))
+                {
+                    //std::cout << it_i << "->"<< it_j << std::endl;
+                    for(size_t k = 0; k<(it_j-it_i)+m_cols; k+=m_cols)
+                    {
+                        //std::cout << it_i+k << std::endl;
+                        if( (isWall((m_board[it_i+k-1])) ||
+                            isWall((m_board[it_i+k+1]))) &&
+                            !isGoal(m_board[it_i+k]) &&
+                            (isFree(m_board[it_i+k])||
+                            isAgent(m_board[it_i+k])))
+                        {
+                            edge.insert(it_i+k);
+                        }
+                        else
+                        {
+                            edge.clear();
+                            break;
+                        }
+                    }
+                }
+                t_edges.insert(edge.begin(), edge.end());
             }
-            else
-                tmp_edge.clear();
         }
     }
-
 }
 
 bool Sokoban::isGoal(char t_cell)

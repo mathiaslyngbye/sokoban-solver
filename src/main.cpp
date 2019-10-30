@@ -59,9 +59,9 @@ int main(int argc, char *argv[])
     // Initialize map with defaults
     std::string map =   "XXXXXX";
     map +=              "X....X";
-    map +=              "XMJ..X";
+    map +=              "XM.J.X";
+    map +=              "X..G.X";
     map +=              "X....X";
-    map +=              "X...GX";
     map +=              "XXXXXX";
     size_t cols = 6;
     size_t rows = 6;
@@ -77,17 +77,15 @@ int main(int argc, char *argv[])
     
     // Create sokoban board object
     Sokoban board(map, cols, rows);  
+    board.print(); 
     
-    // Play game 
-    board.play();
-/*    
-    // Attempting solve
-    std::cout << "Solving sokoban... " << std::endl;
-    if(board.solve()) 
-        std::cout << "Done!" << std::endl;
-    else
-        std::cout << "Failed!" << std::endl;
+    // Solve
+    std::string solution = "";
+    if(board.solve(solution))
+        std::cout << std::endl << "Solution:\n" << solution << std::endl;
+
+    //board = Sokoban(map, cols, rows);
+    //board.playback(solution);
     
-*/
     return 0;
 }
