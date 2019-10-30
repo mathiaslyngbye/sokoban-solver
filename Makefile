@@ -12,7 +12,7 @@ OBJS = $(SRCS:$(SRC_DIRS)/%.cpp=$(BUILD_DIR)/%.cpp.o)
 
 # Compile settings 
 CPP 	  = g++
-CPPFLAGS  = -std=c++17 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
+CPPFLAGS  = -std=c++17 -O2 -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic
 INC_FLAGS = $(addprefix -I,$(INC_DIRS))
 CPPFLAGS += $(INC_FLAGS)
 
