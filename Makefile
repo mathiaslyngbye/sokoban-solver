@@ -21,7 +21,7 @@ $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CPP) $(OBJS) -o $@ 
 
 # C++ source
-$(BUILD_DIR)/%.cpp.o: $(SRC_DIRS)/%.cpp
+$(BUILD_DIR)/%.cpp.o: $(SRC_DIRS)/%.cpp $(INC_DIRS)/*
 	$(MKDIR_P) $(dir $@)
 	$(CPP) $(CPPFLAGS) -c $< -o $@
 
