@@ -59,9 +59,9 @@ int main(int argc, char *argv[])
     // Initialize map with defaults
     std::string map =   "XXXXXX";
     map +=              "X....X";
-    map +=              "XM.J.X";
-    map +=              "X..G.X";
+    map +=              "XMJ..X";
     map +=              "X....X";
+    map +=              "X...GX";
     map +=              "XXXXXX";
     size_t cols = 6;
     size_t rows = 6;
@@ -82,8 +82,7 @@ int main(int argc, char *argv[])
     // Solve
     std::string solution = "";
     if(board.solve(solution))
-        std::cout << std::endl << "Solution:\n" << solution << std::endl;
-
+       board.to_csv(solution,"instructions");
     //board = Sokoban(map, cols, rows);
     //board.playback(solution);
     

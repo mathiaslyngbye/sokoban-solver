@@ -6,6 +6,8 @@
 
 #include "sokoban.hpp"
 
+#include "fstream"
+
 Sokoban::Sokoban(std::string t_board, size_t t_cols, size_t t_rows) : 
 m_board(t_board), m_rows(t_rows), m_cols(t_cols)
 {
@@ -237,10 +239,44 @@ void Sokoban::playback(std::string t_solution)
 }
 
 void Sokoban::to_csv(std::string t_solution, 
-    std::string t_filename = "instructions")
+    std::string t_filename)
 {
+    std::string filename = t_filename + ".csv";
     std::cout << "Exporting solution:\n" << t_solution << std::endl;
-    std::cout << "To file:\n" << t_filename << std::endl;
+    std::cout << "To file:\n" << filename << std::endl;
+    
+    std::ofstream myfile;
+    myfile.open(filename);
+
+    for(size_t i = 0; i < t_solution.length(); i++)
+    {
+        char dir;
+        size_t push;
+
+        if( t_solution[i] == 'U' || 
+            t_solution[i] == 'L' || 
+            t_solution[i] == 'D' || 
+            t_solution[i] == 'R')
+        {
+            dir = t_solution[i];
+            push = 1;
+
+            while(t_solution[i+1] == dir)
+            {
+                push++;
+                i++;
+            }
+        }
+        else 
+        {
+            dir = t_solution[i] - 32;
+            push = 0;
+        }
+
+        myfile << dir << ',' << push << '\n';
+                             
+    }
+    myfile.close();
 }
 
 bool Sokoban::isWin()
