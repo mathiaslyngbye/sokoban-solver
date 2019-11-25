@@ -210,7 +210,7 @@ void Sokoban::play()
 void Sokoban::playback(std::string t_solution)
 { 
     bool tmp_push = false;
-    if (!(std::system("clear")))
+    if ((std::system("clear")))
         return;
     print();
     for(unsigned int i = 0; i < t_solution.length(); i++)
@@ -232,7 +232,7 @@ void Sokoban::playback(std::string t_solution)
             break;
         } 
         
-        if (!(std::system("clear")))
+        if ((std::system("clear")))
             return;
         print();
     }

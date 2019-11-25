@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
     std::string solution = "";
     if(board.solve(solution))
        board.to_csv(solution,"instructions");
+
     //board = Sokoban(map, cols, rows);
     //board.playback(solution);
     
