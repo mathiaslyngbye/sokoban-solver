@@ -123,6 +123,11 @@ bool Sokoban::solve(std::string &t_solution)
                     if(isWin())
                     {
                         t_solution = tmp_sol+tmp_dir;
+                        std::cout << "Depth:\t"  << curr_depth+1    << '\t';
+                        std::cout << "Open:\t"   << open.size()   << '\t'; 
+                        std::cout << "Closed:\t" << closed.size() << '\t';
+                        std::cout << std::endl; 
+
                         return true;
                     }
                     
@@ -142,6 +147,11 @@ bool Sokoban::solve(std::string &t_solution)
         //Remove front queue element
         open.pop();
     }
+    std::cout << "Depth:\t"  << curr_depth    << '\t';
+    std::cout << "Open:\t"   << open.size()   << '\t'; 
+    std::cout << "Closed:\t" << closed.size() << '\t';
+    std::cout << std::endl; 
+
     return false;
 }
 
