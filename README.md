@@ -1,4 +1,7 @@
 # sokoban-solver
+![sokoban](https://i.imgur.com/21fWeby.png)
+
+## Description
 Symbolic reasoning planner for the Sokoban game. 
 Primary practical of course Introduction to Artificial Intelligence (T550000101).
 
